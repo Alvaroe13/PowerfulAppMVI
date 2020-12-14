@@ -1,4 +1,4 @@
-package editcom.vialsoft.powerfulappmvi.auth
+package editcom.vialsoft.powerfulappmvi.ui.auth
 
 import android.os.Bundle
 import android.util.Log
