@@ -6,11 +6,15 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import dagger.hilt.android.AndroidEntryPoint
 import editcom.vialsoft.powerfulappmvi.R
 import editcom.vialsoft.powerfulappmvi.databinding.FragmentLauncherBinding
+import editcom.vialsoft.powerfulappmvi.repository.AuthRepository
 import editcom.vialsoft.powerfulappmvi.viewModels.AuthViewModel
+import javax.inject.Inject
 
 private const val TAG = "LauncherFragment"
+@AndroidEntryPoint
 class LauncherFragment : Fragment(R.layout.fragment_launcher) {
 
     private lateinit var binding : FragmentLauncherBinding
@@ -19,10 +23,11 @@ class LauncherFragment : Fragment(R.layout.fragment_launcher) {
                                                              // AuthActivity here in this fragment.
 
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentLauncherBinding.bind(view)
-        Log.d(TAG, "onViewCreated: called  ${authViewModel.hashCode()}"  )
+        Log.d(TAG, "onViewCreated: called  ${authViewModel.hashCode()}")
         buttonsActions()
     }
 

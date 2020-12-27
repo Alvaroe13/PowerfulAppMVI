@@ -1,4 +1,4 @@
-package editcom.vialsoft.powerfulappmvi.dataSource.cache
+package editcom.vialsoft.powerfulappmvi.dataSource.auth.cache
 
 import androidx.room.*
 import editcom.vialsoft.powerfulappmvi.model.AuthToken

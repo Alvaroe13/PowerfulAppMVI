@@ -1,4 +1,4 @@
-package editcom.vialsoft.powerfulappmvi.dataSource.cache
+package editcom.vialsoft.powerfulappmvi.dataSource.auth.cache
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
@@ -12,7 +12,4 @@ abstract class AuthDatabase : RoomDatabase() {
 
     abstract fun getAccountDetailsDao(): AuthCacheDao
 
-    companion object{
-        val DATABASE_NAME = "auth_database"
-    }
 }

@@ -1,11 +1,12 @@
 package editcom.vialsoft.powerfulappmvi.session
 
-import android.app.Application
-import editcom.vialsoft.powerfulappmvi.dataSource.cache.AuthTokenDao
+import android.content.Context
+import dagger.hilt.android.qualifiers.ApplicationContext
+import editcom.vialsoft.powerfulappmvi.dataSource.auth.cache.AuthTokenDao
 import javax.inject.Inject
 
-class SessionManager constructor(
+class SessionManager @Inject constructor(
     val authToken : AuthTokenDao,
-    val application : Application
+    @ApplicationContext val application : Context
 ) {
 }

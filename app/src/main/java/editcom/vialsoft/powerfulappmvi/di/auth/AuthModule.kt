@@ -5,32 +5,17 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityComponent
 import dagger.hilt.android.scopes.ActivityScoped
-import editcom.vialsoft.powerfulappmvi.dataSource.apiService.AuthApiService
-import editcom.vialsoft.powerfulappmvi.dataSource.cache.AuthCacheDao
-import editcom.vialsoft.powerfulappmvi.dataSource.cache.AuthTokenDao
-import editcom.vialsoft.powerfulappmvi.repository.AuthRepository
-import editcom.vialsoft.powerfulappmvi.session.SessionManager
+import editcom.vialsoft.powerfulappmvi.dataSource.auth.apiService.AuthApiService
+import retrofit2.Retrofit
 
-@Module
 @InstallIn(ActivityComponent::class)
-class AuthModule {
+@Module
+object AuthModule {
 
-
-    @ActivityScoped
+    @ActivityScoped //as long as activity es alive
     @Provides
-    fun provideAuthRepository(
-        sessionManager: SessionManager,
-        authTokenDao: AuthTokenDao,
-        accountPropertiesDao: AuthCacheDao,
-        openApiAuthService: AuthApiService
-    ): AuthRepository {
-        return AuthRepository(
-            authTokenDao,
-            accountPropertiesDao,
-            openApiAuthService,
-            sessionManager
-        )
-    }
+    fun provideAuhtApiService(retrofit: Retrofit) : AuthApiService =
+        retrofit.create(AuthApiService::class.java)
 
 
 }
