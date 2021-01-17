@@ -1,44 +1,77 @@
 package editcom.vialsoft.powerfulappmvi.viewModels
 
-import android.util.Log
 import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
-import editcom.vialsoft.powerfulappmvi.dataSource.auth.network_responses_model.LoginResponse
-import editcom.vialsoft.powerfulappmvi.dataSource.auth.network_responses_model.RegistrationResponse
+import editcom.vialsoft.powerfulappmvi.model.AuthToken
 import editcom.vialsoft.powerfulappmvi.repository.AuthRepository
-import editcom.vialsoft.powerfulappmvi.util.GenericApiResponse
+import editcom.vialsoft.powerfulappmvi.ui.DataState
+import editcom.vialsoft.powerfulappmvi.ui.auth.state.AuthStateEvent
+import editcom.vialsoft.powerfulappmvi.ui.auth.state.AuthStateEvent.*
+import editcom.vialsoft.powerfulappmvi.ui.auth.state.AuthViewState
+import editcom.vialsoft.powerfulappmvi.ui.auth.state.LoginFields
+import editcom.vialsoft.powerfulappmvi.ui.auth.state.RegistrationFields
+import editcom.vialsoft.powerfulappmvi.util.AbsentLiveData
 
 private const val TAG = "AuthViewModel"
+
 class AuthViewModel @ViewModelInject constructor(
     private val repository: AuthRepository,
     @Assisted private val savedStateHandle: SavedStateHandle //hilt stuff
-) :ViewModel() {
+): BaseViewModel<AuthStateEvent, AuthViewState>(){
 
-    init {
-        Log.d(TAG, "AutViewModel: triggered=  ${doSomething()}" )
-        doSomething()
+
+
+    override fun handleStateEvent(stateEvent: AuthStateEvent): LiveData<DataState<AuthViewState>> {
+
+        when(stateEvent){
+
+            is LoginAttemptEvent ->{
+                return AbsentLiveData.create()
+            }
+            is RegistrationAttemptEvent ->{
+                return AbsentLiveData.create()
+            }
+            is CheckPreviousAuthEvent -> {
+                return AbsentLiveData.create()
+            }
+
+        }
     }
 
-    private fun doSomething() : String{
-        return repository.something()
+    override fun initNewViewState(): AuthViewState {
+        return AuthViewState()
     }
 
-    fun testLogin(): LiveData<GenericApiResponse<LoginResponse>>{
-        return repository.testLogin(
-            "mitchelltabian@gmail.com",
-            "codingwithmitch1"
-        )
+
+    fun setLoginFields(loginFields: LoginFields){
+        val update = getCurrentViewStateOrNew()
+        if(update.loginFields == loginFields){
+            return
+        }
+        update.loginFields = loginFields
+        _viewState.value = update
     }
 
-    fun testRegister(): LiveData<GenericApiResponse<RegistrationResponse>>{
-        return repository.testRegistration(
-            "alvaroe13@gmail.com",
-            "alvaroe13@gmail.com",
-            "android1234",
-            "android1234"
-        )
+
+    fun setRegistrationFields(registrationFields: RegistrationFields){
+        val update = getCurrentViewStateOrNew()
+        if(update.registrationFields == registrationFields){
+            return
+        }
+        update.registrationFields = registrationFields
+        _viewState.value = update
     }
+
+
+    fun setAuthToken(authToken: AuthToken){
+        val update = getCurrentViewStateOrNew()
+        if(update.authToken == authToken){
+            return
+        }
+        update.authToken = authToken
+        _viewState.value = update
+    }
+
 }

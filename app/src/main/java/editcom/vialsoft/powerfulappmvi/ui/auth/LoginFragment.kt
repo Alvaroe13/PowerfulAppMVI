@@ -5,39 +5,51 @@ import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import dagger.hilt.android.AndroidEntryPoint
 import editcom.vialsoft.powerfulappmvi.R
-import editcom.vialsoft.powerfulappmvi.util.ApiEmptyResponse
-import editcom.vialsoft.powerfulappmvi.util.ApiErrorResponse
-import editcom.vialsoft.powerfulappmvi.util.ApiSuccessResponse
+import editcom.vialsoft.powerfulappmvi.databinding.FragmentLoginBinding
+import editcom.vialsoft.powerfulappmvi.ui.auth.state.LoginFields
 import editcom.vialsoft.powerfulappmvi.viewModels.AuthViewModel
 
 private const val TAG = "LoginFragment"
 @AndroidEntryPoint
 class LoginFragment : Fragment(R.layout.fragment_login) {
 
+    //ui
+    private lateinit var binding : FragmentLoginBinding
+    //vars
     private val authViewModel: AuthViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        binding = FragmentLoginBinding.bind(view)
         super.onViewCreated(view, savedInstanceState)
+
         Log.d(TAG, "onViewCreated: called  ${authViewModel.hashCode()}")
+        subscribeObservers()
+    }
 
+    private fun subscribeObservers() {
+        authViewModel.viewState.observe(viewLifecycleOwner, {
+            it.loginFields?.let {loginFields ->
 
-        authViewModel.testLogin().observe(viewLifecycleOwner, { response ->
-
-            when(response){
-                is ApiSuccessResponse ->{
-                    Log.d(TAG, "LOGIN RESPONSE: ${response.body}")
+                loginFields.loginEmail?.let {emailInserted ->
+                    binding.inputEmail.setText(emailInserted)
                 }
-                is ApiErrorResponse ->{
-                    Log.d(TAG, "LOGIN RESPONSE: ${response.errorMessage}")
-                }
-                is ApiEmptyResponse ->{
-                    Log.d(TAG, "LOGIN RESPONSE: Empty Response")
+
+                loginFields.loginPassword?.let {passwordInserted->
+                    binding.inputPassword.setText(passwordInserted)
                 }
             }
         })
+    }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        authViewModel.setLoginFields(
+            LoginFields(
+                binding.inputEmail.text.toString(),
+                binding.inputPassword.text.toString()
+            )
+        )
     }
 }
